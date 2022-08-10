@@ -124,6 +124,16 @@ public class Matrix
         return m;
     }
 
+    public static Matrix operator ^(Matrix m1, float f){
+        Matrix m = new Matrix(m1.Rows, m1.Columns);
+        for(int i=0; i<m1.Rows; i++){
+            for(int j=0; j<m1.Columns; j++){
+                m.Data[i, j] = (float)Math.Pow(m1.Data[i, j], f);
+            }
+        }
+        return m;
+    }
+
     public static Matrix Hadamard(Matrix m1, Matrix m2){
         if(m1.Rows != m2.Rows || m1.Columns != m2.Columns){
             throw new System.Exception("Matrices must be of the same size");
@@ -145,6 +155,16 @@ public class Matrix
             }
         }
         return n;
+    }
+
+    public static float Mean(Matrix m){
+        float sum = 0;
+        for(int i=0; i<m.Rows; i++){
+            for(int j=0; j<m.Columns; j++){
+                sum += m.Data[i, j];
+            }
+        }
+        return sum / (m.Rows * m.Columns);
     }
 
     public void Print(){

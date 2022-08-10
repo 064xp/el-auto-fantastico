@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class NeuralNetwork
 {
     public List<Layer> Layers;
     public IActivationFunction ActivationFunction;
     public float LearningRate { get; set; }
+    public int[] LayerDescriptions { get; private set; }
+
+    public delegate float[] GenerateTarget(float[] input, float[] output, int inputIndex);
+    
     public NeuralNetwork(int[] layerDescriptions, float learningRate, IActivationFunction activationFunction){
+        LayerDescriptions = layerDescriptions;
         Layers = new List<Layer>();
         LearningRate = learningRate;
         ActivationFunction = activationFunction;
@@ -33,9 +39,32 @@ public class NeuralNetwork
     public void Train(float[][] inputs, float[][] targets, int iterations){
         for(int i=0; i<iterations; i++){
             for(int j=0; j<inputs.Length; j++){
+                // float[] input = inputs[j];
+                // float[] target = targets[j];
+                // FeedForward(input);
+                // BackPropagate(target);
+
                 float[] input = inputs[j];
                 float[] target = targets[j];
                 FeedForward(input);
+                BackPropagate(target);
+            }
+        }
+    }
+
+                                        
+    public void Train(float[][] inputs, int iterations, GenerateTarget generateTarget){
+        for(int i=0; i<iterations; i++){
+            for(int j=0; j<inputs.Length; j++){
+                // float[] input = inputs[j];
+                // float[] target = targets[j];
+                // FeedForward(input);
+                // BackPropagate(target);
+
+                float[] input = inputs[j];
+                // float[] target = targets[j];
+                float[] result = FeedForward(input);
+                float[] target = generateTarget(input, result, j);
                 BackPropagate(target);
             }
         }
@@ -69,6 +98,38 @@ public class NeuralNetwork
 
             layer.Weights += weightDelta;
             layer.Bias += gradient;
+        }
+    }
+    
+    public static int ResultsToIndex(float[] results){
+        int index = 0;
+        for(int i=0; i<results.Length; i++){
+            if(results[i] > results[index]){
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public static float LargestResult(float[] results){
+        float largest = 0;
+        for(int i=0; i<results.Length; i++){
+            if(results[i] > largest){
+                largest = results[i];
+            }
+        }
+        return largest;
+    }
+
+    public void CopyNetwork(NeuralNetwork other){
+        if(!LayerDescriptions.SequenceEqual(other.LayerDescriptions)){
+            throw new System.Exception("Cannot copy neural network with different layer descriptions");
+        }
+
+        for(int i=0; i<Layers.Count; i++){
+            Layer otherLayer = other.Layers[i];
+            Layers[i].Weights = otherLayer.Weights;
+            Layers[i].Bias = otherLayer.Bias;
         }
     }
 }
