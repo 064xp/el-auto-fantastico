@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Platform
   - Street
+  - Fire
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Agent
   - Water
   - UI
   - 

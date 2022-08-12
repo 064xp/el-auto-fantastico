@@ -2,17 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarSensors : MonoBehaviour
+public class ShowForward : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
         
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 10.0f, Color.red);
     }
 }

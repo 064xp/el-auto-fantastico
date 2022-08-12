@@ -12,7 +12,6 @@ public class ScenarioCreator : MonoBehaviour{
     public List<GameObject> tempGameObjects;
     GameObject streetInstantiated;
     GameObject streetDirectionInstantiated;
-    GameObject carInstantiated;
     int selectedPrefab = 0;
     int prefabsCreated = 0;
     Transform initialStreet;
@@ -59,13 +58,21 @@ public class ScenarioCreator : MonoBehaviour{
         Destroy(streetDirectionInstantiated);
         streetInstantiated = Instantiate(streetPrefabs[selectedPrefab], transform);
         streetDirectionInstantiated = Instantiate(streetDirection, transform);
+
+        SetChildColliders(streetInstantiated, false);
+    }
+
+    void SetChildColliders(GameObject gameObject, bool enabled){
+        BoxCollider[] colliders = gameObject.GetComponentsInChildren<BoxCollider>();
+        foreach(BoxCollider collider in colliders){
+            collider.enabled = enabled;
+        }
     }
 
     private void createStreet(){
         GameObject temp = Instantiate(streetPrefabs[selectedPrefab], transform.position, streetInstantiated.transform.rotation);
         tempGameData.addData(temp.transform.position, temp.transform.rotation, selectedPrefab);
         tempGameObjects.Add(temp);
-        temp.AddComponent<BoxCollider>();
         if(prefabsCreated == 0)
             initialStreet = temp.transform;
         prefabsCreated++;
@@ -96,17 +103,17 @@ public class ScenarioCreator : MonoBehaviour{
     }
 
     private void startGamePlay(){
-        if(!isPreviewing){
-            cameraGameObject.SetActive(false);
-            streetInstantiated.SetActive(false);
-            streetDirectionInstantiated.SetActive(false);
-            carInstantiated = Instantiate(carGameObject, initialStreet.localPosition, Quaternion.identity);
-        }
         if(isPreviewing){
-            Destroy(carInstantiated);
+            carGameObject.SetActive(false);
             cameraGameObject.SetActive(true);
             streetInstantiated.SetActive(true);
             streetDirectionInstantiated.SetActive(true);
+        } else {
+            cameraGameObject.SetActive(false);
+            streetInstantiated.SetActive(false);
+            streetDirectionInstantiated.SetActive(false);
+            carGameObject.SetActive(true);
+            carGameObject.transform.position = initialStreet.position;
         }
     }
 
