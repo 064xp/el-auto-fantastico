@@ -1,35 +1,51 @@
 using System.Collections;
+using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+// using Cysharp.Threading.Tasks;
 
 public class EnvManager : MonoBehaviour
 {
+    public float TimeScale = 1f;
     public bool Done {get; private set; }= false;
     public int NumActions;
     public CarAgent CarAgent;
-    public bool ReadyToStart = false;
     public int NumStateFeatures {get {return CarAgent.NumFeatures;}}
+    public float ActionInterval;
+    public float LastReward { get; private set;}
 
     void Awake(){
         NumActions = Enum.GetNames(typeof(CarAgent.Actions)).Length;
     }
 
+    void Update(){
+        if(CarAgent.Crashed || CarAgent.ReachedEnd){
+            Done = true;
+        }
+
+        if(Time.timeScale != TimeScale){
+            Time.timeScale = TimeScale;
+        }
+    }
+
     public void Reset(){
-        throw new System.NotImplementedException();
+        CarAgent.Reset();
+        Done = false;
     }
 
     public int NumActionsAvailable(){
         return NumActions;
     }
 
-    public float TakeAction(int action){
-        CarAgent.TakeAction((CarAgent.Actions)action);
-        // wait a little bit for the car to move
-        float[] newState = CarAgent.GetData();
+    public IEnumerator TakeAction(int action){
+        CarAgent.StartAction((CarAgent.Actions)action);
+        yield return new WaitForSeconds(ActionInterval);
+        CarAgent.EndAction();
 
-        return CalculateReward(newState);
+        float[] newState = CarAgent.GetData();
+        LastReward = CalculateReward(newState);
     }
 
     public float[] GetState(){
@@ -45,16 +61,21 @@ public class EnvManager : MonoBehaviour
         float speed = newState[CarAgent.NumRays + 1];
 
         // Angle
-        reward += Map(Mathf.Abs(angle), 0, 180, -1, 1);
+        float absAngle = Mathf.Abs(angle);
+        float angleR = Map(absAngle, 0, 180, 0, 2);
+        float anglePunishment = absAngle > 170 ? Mathf.Abs(absAngle - 360) * -0.03f : 0f;
+        reward += angleR + anglePunishment;
 
         // Centered
         float leftDistance = newState[0];
         float rightDistance = newState[CarAgent.NumRays - 1];
+        float centerR = (1 / Mathf.Abs(leftDistance - rightDistance + .1f) * .1f);
 
-        reward +=  1 / Mathf.Abs(leftDistance - rightDistance + .1f) * .1f;
+        reward +=  centerR;
 
         // Speed
-        reward += Map(speed, 0, 20, 0, 1);
+        float speedR = Map(speed, 0, 13, -0.5f, 5f);
+        reward += speedR;
 
         return reward;
     }

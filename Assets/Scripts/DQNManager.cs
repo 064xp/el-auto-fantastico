@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,8 +20,7 @@ public class DQNManager : MonoBehaviour
     }
 
     public void StartTraining(){
-        // dqn.Train();
-        print("star training");
+        StartCoroutine(dqn.Train());
     }
 
     // Update is called once per frame

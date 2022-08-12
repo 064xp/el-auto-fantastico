@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DQN 
@@ -52,7 +53,7 @@ public class DQN
 
 
         // Initialize 
-        agent = new Agent(NumStateFeatures, new EpsilonGreedyStrategy(EpsilonStart, EpsilonEnd, EpsilonDecay));
+        agent = new Agent(layerDescriptions.Last(), new EpsilonGreedyStrategy(EpsilonStart, EpsilonEnd, EpsilonDecay));
         memory = new ReplayMemory(MemorySize);
         policyNet = new NeuralNetwork(layerDescriptions, learningRate, new ReLu());
         targetNet = new NeuralNetwork(layerDescriptions, learningRate, new ReLu());
@@ -82,20 +83,27 @@ public class DQN
     }
 
     public IEnumerator Train(){
+        yield return new WaitForEndOfFrame();
+        Debug.Log("Starting to train");
         for(int episode=0; episode<NumEpisodes; episode++){
+            Debug.Log($"Starting episode {episode}");
             Env.Reset();
-            float[] state = Env.GetState();
 
             for(int timeStep=0; ; timeStep++){
-                yield return new WaitForEndOfFrame();
+                float[] state = Env.GetState();
                 int action = agent.SelectAction(state, policyNet);
-                float reward = Env.TakeAction(action);
-                // maybe wait for x seconds before next state?
+                yield return Env.TakeAction(action);
+                float reward = Env.LastReward;
+
+                string stateStr = state.Aggregate("", (current, f) => current + $"{f},");
+                Debug.Log($"State: {stateStr} => Took action {action}, reward {reward}");
+
                 float[] nextState = Env.GetState();
                 memory.Push(new Experience(state, action, reward, nextState));
                 state = nextState;
 
                 if(memory.CanProvideSample(BatchSize)){
+                    Debug.Log($"===> Training on episode {episode}");
                     Experience[] experiences = memory.Sample(BatchSize);
                     var (states, actions, rewards, nextStates) = ExtractTensors(experiences);
 
@@ -109,15 +117,18 @@ public class DQN
                         GenerateTargetValue(output, actions[index], targetQValues[index])
                     );
 
-                    yield return new WaitForSeconds(actionInterval);
-                    if(Env.Done){
-                        break;
-                    }
+                    // yield return new WaitForSeconds(actionInterval);
+                }
+
+                if(Env.Done){
+                    break;
                 }
 
                 if(episode % TargetUpdate == 0){
                     targetNet.CopyNetwork(policyNet);
                 }
+
+                yield return null;
             }
         }
     }

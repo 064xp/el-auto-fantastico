@@ -26,11 +26,19 @@ public class CarAgent : MonoBehaviour
     WheelHit wheelHit;
     public LayerMask raycastLayerMask;
     public CarController CarController;
+    [HideInInspector]
     public int NumFeatures { get; private set; }
+    [HideInInspector]
     public bool Crashed;
+    [HideInInspector]
+    public bool ReachedEnd;
+    [HideInInspector]
+    public Vector3 startPosition;
 
     Rigidbody rb;
-    public Vector3 startPosition;
+    
+    float accel = 0f;
+    float steering = 0f;
 
     // Start is called before the first frame update
     void Awake()
@@ -55,21 +63,37 @@ public class CarAgent : MonoBehaviour
         GetDeviationAngle();
     }
 
+    void FixedUpdate(){
+        TakeAction();
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         Crashed = true;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Finish")
+        {
+            ReachedEnd = true;
+        }
+    }
+
+    void TakeAction(){
+        if(accel != 0f || steering != 0f){
+            CarController.Move(accel, steering, 0f, 0f);
+        }
     }
 
     public void Reset(){
         transform.position = startPosition;
         transform.rotation = Quaternion.identity;
         Crashed = false;
+        ReachedEnd = false;
     }
-    public void TakeAction(Actions action)
+    public void StartAction(Actions action)
     {
-        float steering = 0f;
-        float accel = 0f;
-
         switch (action)
         {
             case Actions.Forward:
@@ -90,7 +114,11 @@ public class CarAgent : MonoBehaviour
                 steering = -1f;
                 break;
         }
-        CarController.Move(steering, accel, 0f, 0f);
+    }
+
+    public void EndAction(){
+        accel = 0f;
+        steering = 0f;
     }
 
     public float[] GetData()
