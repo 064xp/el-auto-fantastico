@@ -87,7 +87,7 @@ public class CarAgent : MonoBehaviour
 
     void TakeAction(){
         if(accel != 0f || steering != 0f){
-            CarController.Move(accel, steering, 0f, 0f);
+            CarController.Move(steering, accel, 0f, 0f);
         }
     }
 
@@ -104,11 +104,14 @@ public class CarAgent : MonoBehaviour
         {
             case Actions.Forward:
                 accel = 1f;
+                steering = 0f;
                 break;
             case Actions.Left:
+                accel = 0f;
                 steering = -1f;
                 break;
             case Actions.Right:
+                accel = 0f;
                 steering = 1f;
                 break;
             case Actions.ForwardRight:

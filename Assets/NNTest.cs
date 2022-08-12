@@ -10,7 +10,7 @@ public class NNTest : MonoBehaviour
     void Start()
     {
         LayerDescriptions = new int[]{
-            3, 10, 3
+            3, 10, 16, 6, 3
         };
 
        net = new NeuralNetwork(LayerDescriptions, 0.5f, new Sigmoid());

@@ -18,6 +18,8 @@ public class EnvManager : MonoBehaviour
     public float LastReward { get; private set;}
     public Vector3 LastAgentPos;
 
+    public int action = 0;
+
     void Awake(){
         NumActions = Enum.GetNames(typeof(CarAgent.Actions)).Length;
     }

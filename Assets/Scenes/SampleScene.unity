@@ -351,6 +351,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8662869266602758021, guid: bd6056ea967067749b0e281ab3e76dc3, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8662869266602758021, guid: bd6056ea967067749b0e281ab3e76dc3, type: 3}
       propertyPath: CarController
       value: 
       objectReference: {fileID: 1004747915}
@@ -394,6 +398,7 @@ MonoBehaviour:
   CarAgent: {fileID: 1004747913}
   ActionInterval: 0.7
   LastAgentPos: {x: 0, y: 0, z: 0}
+  action: 0
 --- !u!4 &298224396
 Transform:
   m_ObjectHideFlags: 0
@@ -772,7 +777,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   env: {fileID: 298224395}
-  LayerDescriptions: 000000001800000000000000
+  LayerDescriptions: 00000000100000001800000000000000
 --- !u!4 &1679210810
 Transform:
   m_ObjectHideFlags: 0

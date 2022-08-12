@@ -145,6 +145,8 @@ public class ScenarioCreator : MonoBehaviour{
             foreach(GameObject go in tempGameObjects){
                 Destroy(go);
             }
+            prefabsCreated = 0;
+
             tempGameObjects.Clear();
             renderPreview();
             if(deleteData)
