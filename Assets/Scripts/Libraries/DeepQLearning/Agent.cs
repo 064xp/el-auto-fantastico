@@ -7,6 +7,7 @@ public class Agent
     int currentStep;
     IExplorationStrategy strategy;
     int numActions;
+    public bool explore = true;
 
     public Agent(int numActions, IExplorationStrategy strategy)
     {
@@ -16,10 +17,12 @@ public class Agent
     }
 
     public int SelectAction(float[] state, NeuralNetwork policyNet){
-        float rate = strategy.GetExplorationRate(currentStep);
-        currentStep++;
-        if(rate > Random.value)
-            return Random.Range(0, numActions);
+        if(explore){
+            float rate = strategy.GetExplorationRate(currentStep);
+            currentStep++;
+            if(rate > Random.value)
+                return Random.Range(0, numActions);
+        }
         
         return NeuralNetwork.ResultsToIndex(policyNet.FeedForward(state));
     }

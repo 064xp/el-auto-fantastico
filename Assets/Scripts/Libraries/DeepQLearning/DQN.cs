@@ -18,7 +18,7 @@ public class DQN
     int TrainigIterations;
     EnvManager Env;
 
-    Agent agent;
+    public Agent agent;
     ReplayMemory memory;
     NeuralNetwork policyNet;
     NeuralNetwork targetNet;
@@ -78,10 +78,6 @@ public class DQN
     public float[] GenerateTargetValue(float[] result, int action, float targetQValue){
         float[] target = result.Clone() as float[];
         target[action] = targetQValue;
-        if(target.Any((a) =>  float.IsNaN(a))){
-            Debug.Log("nan");
-        }
-
         return target;
     }
 
@@ -136,5 +132,8 @@ public class DQN
         }
     }
 
+    public CarAgent.Actions GetAction(float[] state){
+        return  (CarAgent.Actions) NeuralNetwork.ResultsToIndex(policyNet.FeedForward(state));
+    }
 
 }

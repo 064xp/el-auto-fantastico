@@ -92,11 +92,11 @@ public class CarAgent : MonoBehaviour
     }
 
     public void Reset(){
+        rb.velocity = Vector3.zero;
         transform.position = startPosition;
         transform.rotation = Quaternion.identity;
         Crashed = false;
         ReachedEnd = false;
-        rb.velocity = Vector3.zero;
     }
     public void StartAction(Actions action)
     {
@@ -175,12 +175,15 @@ public class CarAgent : MonoBehaviour
             Ray ray = new Ray(rayOrigin, Quaternion.AngleAxis(angle, transform.up) * transform.forward);
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, raycastLayerMask))
             {
-                Rays[i] = hit.distance;
+                if(hit.transform.gameObject.CompareTag("Finish"))
+                    Rays[i] = 99f;
+                else
+                    Rays[i] = hit.distance;
                 Debug.DrawLine(rayOrigin, hit.point, Color.green);
             }
             else
             {
-                Rays[i] = 99f;
+                Rays[i] = 0f;
                 Debug.DrawRay(rayOrigin, Quaternion.AngleAxis(angle, transform.up) * transform.forward * 20, Color.cyan);
             }
             angle += 180 / (NumRays - 1);

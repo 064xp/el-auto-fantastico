@@ -396,8 +396,11 @@ MonoBehaviour:
   TimeScale: 1
   NumActions: 0
   CarAgent: {fileID: 1004747913}
-  ActionInterval: 0.7
+  ActionInterval: 0.4
   LastAgentPos: {x: 0, y: 0, z: 0}
+  OnGoalReached:
+    m_PersistentCalls:
+      m_Calls: []
   action: 0
 --- !u!4 &298224396
 Transform:
