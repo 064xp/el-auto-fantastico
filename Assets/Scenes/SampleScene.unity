@@ -216,7 +216,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 921871872151831012, guid: bd6056ea967067749b0e281ab3e76dc3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 921871872151831014, guid: bd6056ea967067749b0e281ab3e76dc3, type: 3}
       propertyPath: m_Layer
@@ -264,7 +264,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 921871872152264092, guid: bd6056ea967067749b0e281ab3e76dc3, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 921871872152264092, guid: bd6056ea967067749b0e281ab3e76dc3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -398,6 +398,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 255526747}
   m_CullTransparentMesh: 1
+--- !u!1 &298224394
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 298224396}
+  - component: {fileID: 298224395}
+  m_Layer: 0
+  m_Name: EnvManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &298224395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298224394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627f6c440db51dc4c9c6eb1e057b4d7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NumActions: 0
+  CarAgent: {fileID: 1004747913}
+  ReadyToStart: 0
+--- !u!4 &298224396
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298224394}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.786817, y: -122.74315, z: 27.123379}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &505057588
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,6 +893,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 921871872151831012, guid: bd6056ea967067749b0e281ab3e76dc3, type: 3}
   m_PrefabInstance: {fileID: 202329627}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1004747913 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8662869266602758021, guid: bd6056ea967067749b0e281ab3e76dc3, type: 3}
+  m_PrefabInstance: {fileID: 202329627}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004747912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c763c3f0c4829894fa30b1d29abd55a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1026901859
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,7 +998,7 @@ RectTransform:
   m_Children:
   - {fileID: 255526748}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1013,7 +1071,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1522181945
 GameObject:
@@ -1137,7 +1195,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1522181945}
   m_CullTransparentMesh: 1
---- !u!1 &1601095690
+--- !u!1 &1679210808
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1145,28 +1203,43 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1601095691}
+  - component: {fileID: 1679210810}
+  - component: {fileID: 1679210809}
   m_Layer: 0
-  m_Name: Vehicle
+  m_Name: DQNManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1601095691
+--- !u!114 &1679210809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679210808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d3bd7809e67db47af2410d2e58e2b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  env: {fileID: 298224395}
+  LayerDescriptions: 000000000a0000001800000000000000
+--- !u!4 &1679210810
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1601095690}
+  m_GameObject: {fileID: 1679210808}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 23.804886, y: -123.41878, z: 28.326725}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1877920079
 GameObject:
@@ -1316,7 +1389,7 @@ GameObject:
   - component: {fileID: 2096950498}
   - component: {fileID: 2096950497}
   m_Layer: 0
-  m_Name: Preview
+  m_Name: ScenarioCreator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1334,6 +1407,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9537b65e184fbfd4aa7febc15656c029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnScenarioReady:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1679210809}
+        m_TargetAssemblyTypeName: DQNManager, Assembly-CSharp
+        m_MethodName: StartTraining
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   cameraGameObject: {fileID: 963194225}
   carGameObject: {fileID: 1004747912}
   streetPrefabs:

@@ -9,8 +9,10 @@ public class EnvManager : MonoBehaviour
     public bool Done {get; private set; }= false;
     public int NumActions;
     public CarAgent CarAgent;
+    public bool ReadyToStart = false;
+    public int NumStateFeatures {get {return CarAgent.NumFeatures;}}
 
-    void Start(){
+    void Awake(){
         NumActions = Enum.GetNames(typeof(CarAgent.Actions)).Length;
     }
 
@@ -36,12 +38,6 @@ public class EnvManager : MonoBehaviour
         
         return CarAgent.GetData();
     }
-
-    public int NumStateFeatures(){
-        // return amount of inputs the car has
-        throw new System.NotImplementedException();
-    }
-
 
     private float CalculateReward(float[] newState){
         float reward = 0;

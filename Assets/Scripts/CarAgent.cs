@@ -33,13 +33,17 @@ public class CarAgent : MonoBehaviour
     public Vector3 startPosition;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         Rays = new float[NumRays];
         rb = GetComponent<Rigidbody>();
         // Num rays + angle + speed
         NumFeatures = NumRays + 2;
         Crashed = false;
+    }
+
+    void Start(){
+        gameObject.SetActive(false);
     }
 
     // Update is called once per frame

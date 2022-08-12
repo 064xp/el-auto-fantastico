@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Newtonsoft.Json;
+using UnityEngine.Events;
 
 public class ScenarioCreator : MonoBehaviour{
+    public UnityEvent OnScenarioReady;
     public GameObject cameraGameObject;
     public GameObject carGameObject;
     public GameObject[] streetPrefabs;
@@ -108,13 +109,17 @@ public class ScenarioCreator : MonoBehaviour{
             cameraGameObject.SetActive(true);
             streetInstantiated.SetActive(true);
             streetDirectionInstantiated.SetActive(true);
+
         } else {
+            // start scene
             cameraGameObject.SetActive(false);
             streetInstantiated.SetActive(false);
             streetDirectionInstantiated.SetActive(false);
             carGameObject.SetActive(true);
             carGameObject.transform.position = initialStreet.position;
             carGameObject.GetComponent<CarAgent>().startPosition = initialStreet.position;
+
+            OnScenarioReady.Invoke();
         }
     }
 
