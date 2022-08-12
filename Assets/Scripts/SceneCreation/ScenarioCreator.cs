@@ -91,8 +91,8 @@ public class ScenarioCreator : MonoBehaviour{
                         transform.position += new Vector3(0, 0.6f, 0);
 
                         if(Input.GetKeyDown(KeyCode.R)){
-                            streetInstantiated.transform.Rotate(0, 0, rotationIncrement);
-                            streetDirectionInstantiated.transform.Rotate(0, 0, rotationIncrement);
+                            streetInstantiated.transform.Rotate(0, rotationIncrement, 0);
+                            streetDirectionInstantiated.transform.Rotate(0, rotationIncrement, 0);
                         }
 
                         if(Input.GetMouseButtonDown(0))

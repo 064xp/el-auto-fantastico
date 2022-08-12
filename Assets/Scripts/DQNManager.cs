@@ -16,7 +16,7 @@ public class DQNManager : MonoBehaviour
         LayerDescriptions[0] = env.NumStateFeatures;
         LayerDescriptions[LayerDescriptions.Length - 1] = env.NumActions;
 
-        dqn = new DQN(env.NumStateFeatures, env, LayerDescriptions, 10);        
+        dqn = new DQN(env.NumStateFeatures, env, LayerDescriptions, 10_000);        
     }
 
     public void StartTraining(){

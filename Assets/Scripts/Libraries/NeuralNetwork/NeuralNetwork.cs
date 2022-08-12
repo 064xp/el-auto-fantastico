@@ -21,8 +21,15 @@ public class NeuralNetwork
             throw new System.Exception("Neural network must have at least 2 layers");
         }
 
-        for(int i=1; i<layerDescriptions.Length; i++){
-            Layers.Add(new LinearLayer(layerDescriptions[i - 1], layerDescriptions[i]));
+        for(int i=0; i<layerDescriptions.Length; i++){
+            Layer newLayer = null;
+            if(i == 0)
+                newLayer = new InputLayer();
+            else
+                newLayer = new LinearLayer(layerDescriptions[i - 1], layerDescriptions[i]);
+
+            newLayer.Randomize();
+            Layers.Add(newLayer);
         }
     }
 
@@ -96,8 +103,8 @@ public class NeuralNetwork
             Matrix prevLayerT = Matrix.Transpose(prevLayer.Output);
             Matrix weightDelta = gradient * prevLayerT;
 
-            layer.Weights += weightDelta;
-            layer.Bias += gradient;
+            Layers[i].Weights = Layers[i].Weights + weightDelta;
+            Layers[i].Bias = Layers[i].Bias +  gradient;
         }
     }
     

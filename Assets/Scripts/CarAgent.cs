@@ -12,7 +12,7 @@ public class CarAgent : MonoBehaviour
         Left,
         Right,
         ForwardRight,
-        LeftRight,
+        ForwardLeft,
         None
     }
 
@@ -23,7 +23,7 @@ public class CarAgent : MonoBehaviour
     public WheelCollider[] Wheels;
     [SerializeField]
     GameObject CurrentStreetSegment;
-    WheelHit wheelHit;
+    // WheelHit wheelHit;
     public LayerMask raycastLayerMask;
     public CarController CarController;
     [HideInInspector]
@@ -34,6 +34,7 @@ public class CarAgent : MonoBehaviour
     public bool ReachedEnd;
     [HideInInspector]
     public Vector3 startPosition;
+    public Vector3 RoadForward;
 
     Rigidbody rb;
     
@@ -57,7 +58,7 @@ public class CarAgent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckWheelColliders();
+        // CheckWheelColliders();
         GetSpeed();
         CastRays();
         GetDeviationAngle();
@@ -74,9 +75,13 @@ public class CarAgent : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Finish")
-        {
+        if(other.gameObject.tag == "Finish"){
             ReachedEnd = true;
+            return;
+        }
+
+        if(other.gameObject.CompareTag("Forward")){
+            RoadForward = other.gameObject.transform.forward;
         }
     }
 
@@ -91,6 +96,7 @@ public class CarAgent : MonoBehaviour
         transform.rotation = Quaternion.identity;
         Crashed = false;
         ReachedEnd = false;
+        rb.velocity = Vector3.zero;
     }
     public void StartAction(Actions action)
     {
@@ -109,7 +115,7 @@ public class CarAgent : MonoBehaviour
                 accel = 1f;
                 steering = 1f;
                 break;
-            case Actions.LeftRight:
+            case Actions.ForwardLeft:
                 accel = 1f;
                 steering = -1f;
                 break;
@@ -135,24 +141,25 @@ public class CarAgent : MonoBehaviour
         Speed = rb.velocity.magnitude;
     }
 
-    void CheckWheelColliders()
-    {
-        foreach (WheelCollider wheel in Wheels)
-        {
-            if (wheel.GetGroundHit(out wheelHit))
-            {
-                if (wheelHit.collider.gameObject.CompareTag("Street"))
-                {
-                    GameObject parent = wheelHit.collider.gameObject.transform.parent.gameObject;
-                    if (parent != CurrentStreetSegment)
-                    {
-                        CurrentStreetSegment = parent;
-                        break;
-                    }
-                }
-            }
-        }
-    }
+    // void CheckWheelColliders()
+    // {
+    //     foreach (WheelCollider wheel in Wheels)
+    //     {
+    //         if (wheel.GetGroundHit(out wheelHit))
+    //         {
+    //             if (wheelHit.collider.gameObject.CompareTag("Street"))
+    //             {
+    //                 GameObject parent = wheelHit.collider.gameObject.transform.parent.gameObject;
+    //                 if (parent != CurrentStreetSegment)
+    //                 {
+    //                     CurrentStreetSegment = parent;
+    //                     RoadForward = parent.transform.forward;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     private void CastRays()
     {
@@ -170,7 +177,7 @@ public class CarAgent : MonoBehaviour
             }
             else
             {
-                Rays[i] = Mathf.Infinity;
+                Rays[i] = 99f;
                 Debug.DrawRay(rayOrigin, Quaternion.AngleAxis(angle, transform.up) * transform.forward * 20, Color.cyan);
             }
             angle += 180 / (NumRays - 1);
@@ -180,18 +187,14 @@ public class CarAgent : MonoBehaviour
     // gets the angle of the car relative to the street
     private void GetDeviationAngle()
     {
-        if (CurrentStreetSegment != null)
+        Vector3 carDirection = transform.forward;
+        Vector2 carDirection2D = new Vector2(carDirection.x, carDirection.z);
+        Vector2 streetDirection2D = new Vector2(RoadForward.x, RoadForward.z);
+        float angle = Vector2.Angle(carDirection2D, streetDirection2D);
+        if (Vector3.Dot(Vector3.Cross(carDirection, RoadForward), Vector3.up) < 0)
         {
-            Vector3 carDirection = transform.forward;
-            Vector2 carDirection2D = new Vector2(carDirection.x, carDirection.z);
-            Vector3 streetDirection = CurrentStreetSegment.transform.forward;
-            Vector2 streetDirection2D = new Vector2(streetDirection.x, streetDirection.z);
-            float angle = Vector2.Angle(carDirection2D, streetDirection2D);
-            if (Vector3.Dot(Vector3.Cross(carDirection, streetDirection), Vector3.up) < 0)
-            {
-                angle = -angle;
-            }
-            DeviationAngle = angle;
+            angle = -angle;
         }
+        DeviationAngle = angle;
     }
 }

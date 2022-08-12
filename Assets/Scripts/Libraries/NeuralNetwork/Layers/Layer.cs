@@ -9,4 +9,7 @@ public class Layer{
     public virtual Matrix Forward(Matrix input, IActivationFunction activationFunction){
         throw new System.NotImplementedException();
     }
+
+    public virtual void Randomize(){
+    }
 }

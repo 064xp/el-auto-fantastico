@@ -8,6 +8,7 @@ using UnityEngine;
 
 public class EnvManager : MonoBehaviour
 {
+    [Range(1f, 100f)]
     public float TimeScale = 1f;
     public bool Done {get; private set; }= false;
     public int NumActions;
@@ -15,9 +16,14 @@ public class EnvManager : MonoBehaviour
     public int NumStateFeatures {get {return CarAgent.NumFeatures;}}
     public float ActionInterval;
     public float LastReward { get; private set;}
+    public Vector3 LastAgentPos;
 
     void Awake(){
         NumActions = Enum.GetNames(typeof(CarAgent.Actions)).Length;
+    }
+
+    void Start(){
+        LastAgentPos = CarAgent.startPosition;
     }
 
     void Update(){
@@ -33,6 +39,7 @@ public class EnvManager : MonoBehaviour
     public void Reset(){
         CarAgent.Reset();
         Done = false;
+        LastAgentPos = CarAgent.startPosition;
     }
 
     public int NumActionsAvailable(){
@@ -40,6 +47,7 @@ public class EnvManager : MonoBehaviour
     }
 
     public IEnumerator TakeAction(int action){
+        Vector3 startPosition = CarAgent.transform.position;
         CarAgent.StartAction((CarAgent.Actions)action);
         yield return new WaitForSeconds(ActionInterval);
         CarAgent.EndAction();
@@ -62,9 +70,10 @@ public class EnvManager : MonoBehaviour
 
         // Angle
         float absAngle = Mathf.Abs(angle);
-        float angleR = Map(absAngle, 0, 180, 0, 2);
+        // float angleR = Map(absAngle, 0, 180, 0, 0.5f);
         float anglePunishment = absAngle > 170 ? Mathf.Abs(absAngle - 360) * -0.03f : 0f;
-        reward += angleR + anglePunishment;
+        // reward += angleR + anglePunishment;
+        reward += anglePunishment;
 
         // Centered
         float leftDistance = newState[0];
@@ -76,6 +85,20 @@ public class EnvManager : MonoBehaviour
         // Speed
         float speedR = Map(speed, 0, 13, -0.5f, 5f);
         reward += speedR;
+
+        // position
+        if(LastAgentPos != Vector3.zero){
+            Vector3 movement = CarAgent.transform.position - LastAgentPos;
+            float distanceTraveled = Vector3.Dot(CarAgent.RoadForward, movement);
+            reward += distanceTraveled * 2f;
+
+            Debug.Log($"Distance Traveled {distanceTraveled}");
+        }
+
+        LastAgentPos = CarAgent.transform.position;
+
+        if(CarAgent.ReachedEnd)
+            reward += 5f;
 
         return reward;
     }

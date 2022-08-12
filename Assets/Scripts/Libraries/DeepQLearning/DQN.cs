@@ -35,7 +35,7 @@ public class DQN
         float epsilonStart = 1, float epsilonEnd = 0.1f, float epsilonDecay = 0.001f,
         int targetUpdate = 10,
         int memorySize = 100_000,
-        float learningRate = 0.001f,
+        float learningRate = 0.01f,
         int numEpisodes = 1_000
     ){
         NumStateFeatures = numStateFeatures;
@@ -55,8 +55,8 @@ public class DQN
         // Initialize 
         agent = new Agent(layerDescriptions.Last(), new EpsilonGreedyStrategy(EpsilonStart, EpsilonEnd, EpsilonDecay));
         memory = new ReplayMemory(MemorySize);
-        policyNet = new NeuralNetwork(layerDescriptions, learningRate, new ReLu());
-        targetNet = new NeuralNetwork(layerDescriptions, learningRate, new ReLu());
+        policyNet = new NeuralNetwork(layerDescriptions, learningRate, new Sigmoid());
+        targetNet = new NeuralNetwork(layerDescriptions, learningRate, new Sigmoid());
 
         targetNet.CopyNetwork(policyNet);
     }
@@ -78,6 +78,9 @@ public class DQN
     public float[] GenerateTargetValue(float[] result, int action, float targetQValue){
         float[] target = result.Clone() as float[];
         target[action] = targetQValue;
+        if(target.Any((a) =>  float.IsNaN(a))){
+            Debug.Log("nan");
+        }
 
         return target;
     }

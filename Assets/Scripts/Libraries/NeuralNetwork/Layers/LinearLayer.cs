@@ -14,7 +14,7 @@ class LinearLayer : Layer {
 
     public override Matrix Forward(Matrix input){
         Output = (Weights * input);
-        Output += Bias;
+        Output = Output + Bias;
         return Output;
     }
 
@@ -23,5 +23,10 @@ class LinearLayer : Layer {
         Output = Forward(input);
         Output = Matrix.Map(Output, activationFunction.Calculate);
         return Output;
+    }
+
+    override public void Randomize(){
+        Weights.Randomize();
+        Bias.Randomize();
     }
 }
