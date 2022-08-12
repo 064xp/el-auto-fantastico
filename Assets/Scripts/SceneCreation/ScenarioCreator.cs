@@ -114,6 +114,7 @@ public class ScenarioCreator : MonoBehaviour{
             streetDirectionInstantiated.SetActive(false);
             carGameObject.SetActive(true);
             carGameObject.transform.position = initialStreet.position;
+            carGameObject.GetComponent<CarAgent>().startPosition = initialStreet.position;
         }
     }
 
